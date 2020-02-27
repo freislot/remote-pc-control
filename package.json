@@ -1,0 +1,26 @@
+{
+  "name": "win-audio-remote",
+  "version": "1.0.0",
+  "description": "Управление звуком Windows с помощью node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freislot/win-audio-remote.git"
+  },
+  "keywords": [
+    "node",
+    "windows",
+    "volume",
+    "react",
+    "remote"
+  ],
+  "author": "Antonov Pavel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freislot/win-audio-remote/issues"
+  },
+  "homepage": "https://github.com/freislot/win-audio-remote#readme"
+}
