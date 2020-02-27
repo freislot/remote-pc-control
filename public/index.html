@@ -1,51 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    * {
+    body {
+      background: #333333;
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
       cursor: pointer;
+      border-radius: 10px;
+      border: 0;
+      background: #f5f5f5;
+      margin: 5px;
+      padding: 0;
+      width: 100px;
+      height: 100px;
+    }
+
+    button img {
+      width: 100px;
+      height: 90px;
+    }
+
+    .wrapper {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      padding: 0 15px;
+    }
+
+    .buttons {
+      text-align: center;
+    }
+
+    #value {
+      color: #fff;
+      font-size: 96px;
+      font-family: sans-serif;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    input[type=range] {
+      border-radius: 4px;
+      -webkit-appearance: none;
+      width: 100%;
+      background: #fff;
+      height: 4px;
+      margin: 40px 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 50px;
+      height: 50px;
+      background: #f5f5f5;
+      border-radius: 100%;
+      border: 0;
     }
   </style>
 </head>
+
 <body>
-  <div id="value"></div>
-  <button tabindex="1" onclick="volumeUp()">volumeUp</button>
-  <button onclick="volumeDown()">volumeDown</button>
-  <button onclick="volumeToggle()">volumeToggle</button>
+  <div class="wrapper">
+    <div id="value">56</div>
+    <div class="buttons">
+      <button onclick="volumeDown()">
+        <img src="images/volDown.png" />
+      </button>
+      <button onclick="volumeUp()">
+        <img src="images/volUp.png" />
+      </button>
+      <button onclick="volumeToggle()">
+        <img src="images/volMute.png" />
+      </button>
+    </div>
 
-  <br />
-  <br />
-  <br />
-  <input 
-    id="range" 
-    type="range"
-    min="0"
-    max="100"
-    step="1"
-    value="" 
-    onchange="volumeChange()"
-    oninput="volumeChangeValue()"
-  />
+    <input id="range" type="range" min="0" max="100" step="1" value="" onchange="volumeChange()"
+      oninput="volumeChangeValue()" />
+    <div class="buttons">
+      <button onclick="displaySleep()">displaySleep</button>
+      <button onclick="displayWake()">displayWake</button>
+    </div>
 
-  <br />
-  <br />
-  <br />
-  <button onclick="displaySleep()">displaySleep</button>
-  <button onclick="displayWake()">displayWake</button>
-
+  </div>
 
   <script type="text/javascript">
-    
+
     const getValue = () => fetch('/get')
-    .then(res => res.text())
-    .then(res => JSON.parse(res))
-    .then(res => {
-      document.getElementById("range").value = res.value;
-      document.getElementById("value").innerText = res.value;
-    });
+      .then(res => res.text())
+      .then(res => JSON.parse(res))
+      .then(res => {
+        document.getElementById("range").value = res.value;
+        document.getElementById("value").innerText = res.value;
+      });
 
     getValue();
 
@@ -61,19 +115,19 @@
 
     const volumeToggle = () => {
       fetch('/toggle', { method: 'POST' })
-      .then(res => res.text())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        document.getElementById("range").value = res.isMuted ? 0 : res.value;
-        document.getElementById("value").innerText = res.value;
-      });
+        .then(res => res.text())
+        .then(res => JSON.parse(res))
+        .then(res => {
+          document.getElementById("range").value = res.isMuted ? 0 : res.value;
+          document.getElementById("value").innerText = res.value;
+        });
     };
 
     const volumeChange = () => {
-      fetch('/set', { 
+      fetch('/set', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ value: document.getElementById("range").value }) 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: document.getElementById("range").value })
       });
     };
 
@@ -81,15 +135,16 @@
       const value = document.getElementById("range").value;
       document.getElementById("value").innerText = value;
     };
-    
+
     const displaySleep = () => {
       fetch('/displayoff', { method: 'POST' });
     };
-    
+
     const displayWake = () => {
       fetch('/displayon', { method: 'POST' });
     };
 
   </script>
 </body>
+
 </html>
