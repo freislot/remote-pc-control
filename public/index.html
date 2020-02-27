@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="value"></div>
+  <button onclick="volumeUp()">volumeUp</button>
+  <button onclick="volumeDown()">volumeDown</button>
+  <button onclick="volumeToggle()">volumeToggle</button>
+
+  <br />
+  <br />
+  <br />
+  <input 
+    id="range" 
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    value="" 
+    onchange="volumeChange()"
+    oninput="volumeChangeValue()"
+  />
+
+  <script type="text/javascript">
+    const getValue = () => fetch('/get').then(res => res.json()).then(res => {
+      document.getElementById("range").value = res?.value;
+      document.getElementById("value").innerText = res?.value;
+    });
+
+    getValue();
+
+    const volumeUp = () => {
+      fetch('/up', { method: 'POST' });
+      getValue();
+    };
+
+    const volumeDown = () => {
+      fetch('/down', { method: 'POST' });
+      getValue();
+    };
+
+    const volumeToggle = () => {
+      fetch('/toggle', { method: 'POST' }).then(res => res.json()).then(res => {
+        document.getElementById("range").value = res?.isMuted ? 0 : res?.value;
+        document.getElementById("value").innerText = res?.value;
+      });
+    };
+
+    const volumeChange = () => {
+      fetch('/set', { 
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ value: document.getElementById("range").value }) 
+      });
+    };
+
+    const volumeChangeValue = () => {
+      const value = document.getElementById("range").value;
+      document.getElementById("value").innerText = value;
+    };
+
+  </script>
+</body>
+</html>
