@@ -25,6 +25,8 @@
   "homepage": "https://github.com/freislot/win-audio-remote#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "display-control": "^0.1.1",
     "express": "^4.17.1",
     "win-audio": "^2.0.2"
   }

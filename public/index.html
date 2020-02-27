@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    * {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div id="value"></div>
-  <button onclick="volumeUp()">volumeUp</button>
+  <button tabindex="1" onclick="volumeUp()">volumeUp</button>
   <button onclick="volumeDown()">volumeDown</button>
   <button onclick="volumeToggle()">volumeToggle</button>
 
@@ -25,10 +30,21 @@
     oninput="volumeChangeValue()"
   />
 
+  <br />
+  <br />
+  <br />
+  <button onclick="displaySleep()">displaySleep</button>
+  <button onclick="displayWake()">displayWake</button>
+
+
   <script type="text/javascript">
-    const getValue = () => fetch('/get').then(res => res.json()).then(res => {
-      document.getElementById("range").value = res?.value;
-      document.getElementById("value").innerText = res?.value;
+    
+    const getValue = () => fetch('/get')
+    .then(res => res.text())
+    .then(res => JSON.parse(res))
+    .then(res => {
+      document.getElementById("range").value = res.value;
+      document.getElementById("value").innerText = res.value;
     });
 
     getValue();
@@ -44,9 +60,12 @@
     };
 
     const volumeToggle = () => {
-      fetch('/toggle', { method: 'POST' }).then(res => res.json()).then(res => {
-        document.getElementById("range").value = res?.isMuted ? 0 : res?.value;
-        document.getElementById("value").innerText = res?.value;
+      fetch('/toggle', { method: 'POST' })
+      .then(res => res.text())
+      .then(res => JSON.parse(res))
+      .then(res => {
+        document.getElementById("range").value = res.isMuted ? 0 : res.value;
+        document.getElementById("value").innerText = res.value;
       });
     };
 
@@ -61,6 +80,14 @@
     const volumeChangeValue = () => {
       const value = document.getElementById("range").value;
       document.getElementById("value").innerText = value;
+    };
+    
+    const displaySleep = () => {
+      fetch('/displayoff', { method: 'POST' });
+    };
+    
+    const displayWake = () => {
+      fetch('/displayon', { method: 'POST' });
     };
 
   </script>
