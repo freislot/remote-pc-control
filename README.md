@@ -12,3 +12,23 @@
 
 Получился этакий пульт для компа :)
 
+![alt text](https://github.com/freislot/remote-pc-control/blob/master/public/images/app_screenshot.jpg?raw=true "Screenshot")
+
+# Установка
+
+В папке с проектом выполнить команду
+```
+npm i
+```
+# Запуск
+
+В папке с проектом запустить команду
+```
+node server.js
+```
+
+Для автозапуска сервера при загрузке Windows я написал bat файл в корне проекта **run.cmd**, который запускает сервер.\
+Сделал ярлык и положил его по пути
+```
+C:\Users\ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+```
