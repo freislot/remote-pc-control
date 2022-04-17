@@ -1,14 +1,14 @@
 {
-  "name": "win-audio-remote",
-  "version": "1.0.0",
-  "description": "Управление звуком Windows с помощью node.js",
+  "name": "remote-pc-control",
+  "version": "2.0.0",
+  "description": "Управление Windows с помощью node.js",
   "main": "index.js",
   "scripts": {
     "start server": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freislot/win-audio-remote.git"
+    "url": "git+https://github.com/freislot/remote-pc-control.git"
   },
   "keywords": [
     "node",
@@ -20,9 +20,9 @@
   "author": "Antonov Pavel",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/freislot/win-audio-remote/issues"
+    "url": "https://github.com/freislot/remote-pc-control/issues"
   },
-  "homepage": "https://github.com/freislot/win-audio-remote#readme",
+  "homepage": "https://github.com/freislot/remote-pc-control#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
