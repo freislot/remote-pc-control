@@ -3,33 +3,45 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0< user-scalable='no'">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Громкость</title>
   <style>
+    html,
     body {
-      background: #333333;
+      position: fixed;
+      width: 375px;
+      height: 790px;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+    }
+
+    body {
       margin: 0;
       padding: 0;
+      background: #000;
     }
 
     button {
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: 100%;
       border: 0;
       background: #f5f5f5;
-      margin: 5px;
+      margin: 0;
       padding: 0;
-      width: 100px;
-      height: 100px;
+      width: 75px;
+      height: 75px;
+      touch-action: manipulation;
     }
 
     button img {
-      width: 100px;
-      height: 90px;
+      width: 75px;
+      height: 65px;
     }
 
     .wrapper {
-      margin-top: 50px;
+      margin-top: 15px;
       display: flex;
       flex-direction: column;
       padding: 0 15px;
@@ -37,14 +49,35 @@
 
     .buttons {
       text-align: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .buttons.volume {
+      justify-content: center;
+    }
+
+    .buttons.volume button {
+      margin-right: 7px;
+      margin-left: 7px;
     }
 
     #value {
       color: #fff;
-      font-size: 96px;
+      font-size: 16px;
       font-family: sans-serif;
       text-align: center;
-      margin-bottom: 40px;
+    }
+
+    .stats {
+      color: #fff;
+      font-size: 16px;
+      font-family: sans-serif;
+      margin: 20px 0;
+    }
+
+    .stats>div {
+      margin-bottom: 5px;
     }
 
     input[type=range] {
@@ -53,24 +86,79 @@
       width: 100%;
       background: #fff;
       height: 4px;
-      margin: 40px 0;
+      margin-bottom: 45px;
+      margin-top: 45px;
     }
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       background: #f5f5f5;
       border-radius: 100%;
       border: 0;
     }
+
+    .shutdownNum {
+      font-size: 20px;
+      line-height: 20px;
+      color: red;
+    }
+
+    .touchpad {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 320px;
+      height: 180px;
+      color: #a2a2a2;
+      font-family: sans-serif;
+      font-size: 12px;
+      background: #676767;
+      border-radius: 20px;
+      margin: 0 auto;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .touchpad .cursor {
+      display: block;
+      width: 10px;
+      height: 15px;
+      background: url(./images/cursor.png);
+      background-size: contain;
+      border-radius: 100%;
+      position: absolute;
+      opacity: 0
+    }
+
+    .label {
+      font-size: 12px;
+      font-family: sans-serif;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .block_two_buttons {
+      width: 165px;
+      text-align: left;
+      margin-top: 25px;
+    }
   </style>
+  <script src="./jquery.js"></script>
+  <script src="./moment.js"></script>
 </head>
 
 <body>
   <div class="wrapper">
-    <div id="value">56</div>
-    <div class="buttons">
+    <!-- Громкость -->
+    <div id="value">Громкость -</div>
+    <input id="range" type="range" min="0" max="100" step="1" value="" onchange="volumeChange()"
+      oninput="volumeChangeValue()" />
+    <div class="buttons volume">
       <button onclick="volumeDown()">
         <img src="images/volDown.png" />
       </button>
@@ -82,30 +170,113 @@
       </button>
     </div>
 
-    <input id="range" type="range" min="0" max="100" step="1" value="" onchange="volumeChange()"
-      oninput="volumeChangeValue()" />
-    <div class="buttons">
-      <button onclick="displaySleep()">displaySleep</button>
-      <button onclick="displayWake()">displayWake</button>
+    <!-- Тачпад -->
+    <div class="touchpad">
+      <span>Тачпад</span>
+      <div class="cursor"></div>
     </div>
+
+    <!-- Выключение компа -->
+    <div class="label">
+      Таймер выключения
+      <div id="timerText">не установлен</div>
+    </div>
+    <div class="buttons">
+      <button onclick="shutdown(0.5)" class="shutdownNum">30<br>мин</button>
+      <button onclick="shutdown(1)" class="shutdownNum">1<br>час</button>
+      <button onclick="shutdown(0)" style="background: red; color: #fff">Выключить комп СЕЙЧАС!</button>
+      <button onclick="shutdownOff()" style="background: #56b75a; color: #fff">Отменить отключение</button>
+    </div>
+
+    <div class="buttons">
+      <div class="block_two_buttons">
+        <!-- Перемотка -->
+        <div class="label">Перемотка YouTube</div>
+        <div class="buttons">
+          <button onclick="left()" class="shutdownNum">Назад</button>
+          <button onclick="right()" class="shutdownNum">Вперед</button>
+        </div>
+      </div>
+    </div>
+
+
 
   </div>
 
+
   <script type="text/javascript">
+    $(function () {
+      $(".touchpad").on('touchmove', function (e) {
+        e.preventDefault();
+
+        var offset = $(".touchpad").offset();
+        var relativeX = (e.pageX - offset.left);
+        var relativeY = (e.pageY - offset.top);
+        $(".touchpad span").html('Координаты мышки <br />x: ' + relativeX * 8 + 'px<br />y: ' + relativeY * 8 + 'px');
+        $(".cursor").css({ left: relativeX, top: relativeY, opacity: 1 });
+
+        fetch('/mousemove', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x: relativeX * 8, y: relativeY * 8 })
+        });
+
+      });
+
+      $(".touchpad").on('click', function (e) {
+        e.preventDefault();
+
+        fetch('/tap', { method: 'POST' });
+      });
+    });
 
     const getValue = () => fetch('/get')
       .then(res => res.text())
       .then(res => JSON.parse(res))
       .then(res => {
+        if (res.isTimerActive) {
+          document.getElementById("timerText").style.color = '#ff0000';
+          document.getElementById("timerText").innerText = `До выключения ${parseInt(res.timeToOff / 60)} минут`;
+        } else {
+          document.getElementById("timerText").style.color = '#ffffff';
+          document.getElementById("timerText").innerText = `не установлен`;
+        }
         document.getElementById("range").value = res.value;
-        document.getElementById("value").innerText = res.value;
+        document.getElementById("value").innerText = 'Громкость ' + res.value;
       });
 
-    getValue();
+
+
+    setInterval(function () {
+      getValue();
+    }, 1000)
 
     const volumeUp = () => {
       fetch('/up', { method: 'POST' });
       getValue();
+    };
+
+    const left = () => {
+      fetch('/left', { method: 'POST' });
+      getValue();
+    };
+    const right = () => {
+      fetch('/right', { method: 'POST' });
+      getValue();
+    };
+
+    const shutdown = (num = 1) => {
+      fetch('/shutdown', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: 3600 * num })
+      });
+    };
+
+    const shutdownOff = () => {
+      fetch('/shutdownOff', {
+        method: 'POST',
+      });
     };
 
     const volumeDown = () => {
@@ -119,7 +290,7 @@
         .then(res => JSON.parse(res))
         .then(res => {
           document.getElementById("range").value = res.isMuted ? 0 : res.value;
-          document.getElementById("value").innerText = res.value;
+          document.getElementById("value").innerText = res.isMuted ? 'Громкость ' + 0 : 'Громкость ' + res.value;
         });
     };
 
@@ -133,16 +304,9 @@
 
     const volumeChangeValue = () => {
       const value = document.getElementById("range").value;
-      document.getElementById("value").innerText = value;
+      document.getElementById("value").innerText = 'Громкость ' + value;
     };
 
-    const displaySleep = () => {
-      fetch('/displayoff', { method: 'POST' });
-    };
-
-    const displayWake = () => {
-      fetch('/displayon', { method: 'POST' });
-    };
 
   </script>
 </body>
